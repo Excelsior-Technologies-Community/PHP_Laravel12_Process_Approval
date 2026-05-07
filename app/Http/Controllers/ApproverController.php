@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\ApprovalFlow;
 use App\Models\ApprovalRequest;
 use App\Models\ApprovalHistory;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApprovalStatusMail;
 
 class ApproverController extends Controller
 {
@@ -22,6 +24,9 @@ class ApproverController extends Controller
     {
         $flow = ApprovalFlow::findOrFail($id);
 
+        $approvalRequest = ApprovalRequest::findOrFail($flow->request_id);
+
+        // Save history
         ApprovalHistory::create([
             'request_id' => $flow->request_id,
             'approver_id' => auth()->id(),
@@ -29,10 +34,17 @@ class ApproverController extends Controller
             'comment' => $request->comment,
         ]);
 
-        $approvalRequest = ApprovalRequest::findOrFail($flow->request_id);
+        // Update request status
         $approvalRequest->status = $request->status;
         $approvalRequest->save();
 
-        return redirect()->route('approvals.pending')->with('success', 'Action submitted!');
+        // EMAIL SEND TO REQUEST OWNER
+        if ($approvalRequest->user && $approvalRequest->user->email) {
+            Mail::to($approvalRequest->user->email)
+                ->send(new ApprovalStatusMail($approvalRequest));
+        }
+
+        return redirect()->route('approvals.pending')
+            ->with('success', 'Action submitted & email sent!');
     }
 }

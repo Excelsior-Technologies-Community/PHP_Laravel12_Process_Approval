@@ -8,15 +8,23 @@ use App\Models\ApprovalFlow;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $userId = auth()->id();
+        $query = ApprovalRequest::where('user_id', auth()->id());
 
-        // Requests submitted by logged-in user
-        $myRequests = ApprovalRequest::where('user_id', $userId)->get();
+        // SEARCH BY TITLE
+        if ($request->search) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
 
-        // Pending approvals for logged-in user
-        $pendingApprovals = ApprovalFlow::where('approver_id', $userId)->get();
+        // FILTER BY STATUS
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $myRequests = $query->latest()->get();
+
+        $pendingApprovals = ApprovalFlow::where('approver_id', auth()->id())->get();
 
         return view('dashboard', compact('myRequests', 'pendingApprovals'));
     }
