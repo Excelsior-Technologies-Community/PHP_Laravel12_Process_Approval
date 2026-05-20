@@ -22,10 +22,22 @@ class DashboardController extends Controller
             $query->where('status', $request->status);
         }
 
-        $myRequests = $query->latest()->get();
+        $myRequests = $query->latest()->paginate(10);
 
-        $pendingApprovals = ApprovalFlow::where('approver_id', auth()->id())->get();
+        $pendingApprovals = ApprovalFlow::where('approver_id', auth()->id())
+            ->where('status', 'pending')
+            ->with('request')
+            ->get();
+        
+        // Statistics
+        $stats = [
+            'total_requests' => ApprovalRequest::where('user_id', auth()->id())->count(),
+            'pending_requests' => ApprovalRequest::where('user_id', auth()->id())->where('status', 'pending')->count(),
+            'approved_requests' => ApprovalRequest::where('user_id', auth()->id())->where('status', 'approved')->count(),
+            'rejected_requests' => ApprovalRequest::where('user_id', auth()->id())->where('status', 'rejected')->count(),
+            'pending_approvals' => $pendingApprovals->count(),
+        ];
 
-        return view('dashboard', compact('myRequests', 'pendingApprovals'));
+        return view('dashboard', compact('myRequests', 'pendingApprovals', 'stats'));
     }
 }

@@ -1,186 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Process Approval Dashboard</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #edf2f7;
+        * {
             margin: 0;
-            padding: 30px;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        h1 {
-            text-align: center;
-            color: #1f2937;
-            margin-bottom: 20px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f3f4f6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0 20px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
         }
 
         .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        /* Cards */
         .card {
-            background: #fff;
-            width: 360px;
+            background: white;
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .card h3 {
-            margin: 0 0 10px 0;
-            font-size: 20px;
-            color: #111827;
-        }
-
-        .card p {
-            margin: 5px 0;
-            color: #4b5563;
-        }
-
-        .badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: #fff;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .badge-pending { background: #f59e0b; }
-        .badge-approved { background: #10b981; }
-        .badge-rejected { background: #ef4444; }
-
-        .section-title {
-            text-align: center;
-            font-size: 18px;
-            color: #111827;
-            margin: 25px 0 10px 0;
-            font-weight: bold;
-        }
-
-        .top-buttons {
-            text-align: center;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
-        .top-buttons a {
-            display: inline-block;
-            background: #10b981;
-            color: #fff;
-            padding: 10px 18px;
+        .card-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
             border-radius: 6px;
             text-decoration: none;
-            margin: 5px;
-            font-weight: bold;
+            display: inline-block;
         }
 
-        .top-buttons a:hover {
-            background: #059669;
+        .btn-primary:hover {
+            background: #5a67d8;
         }
 
-        /* SEARCH BOX */
-        .filter-box {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .view-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .pending-item {
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .pending-item a {
+            text-decoration: none;
+        }
+
+        .empty-state {
             text-align: center;
-            margin-bottom: 20px;
+            padding: 40px;
+            color: #9ca3af;
         }
 
-        .filter-box input,
-        .filter-box select {
-            padding: 10px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 200px;
-        }
-
-        .filter-box button {
-            padding: 10px 15px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .filter-box button:hover {
-            background: #2563eb;
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            
+            th {
+                display: none;
+            }
+            
+            td {
+                padding: 10px;
+                border-bottom: 1px solid #e5e7eb;
+            }
         }
     </style>
 </head>
-
 <body>
-
-    <h1>Process Approval Dashboard</h1>
-
-    <!-- TOP BUTTONS -->
-    <div class="top-buttons">
-        <a href="{{ route('approvals.create') }}">+ Create Request</a>
-        <a href="{{ route('approvals.index') }}">📋 View All Requests</a>
-        <a href="{{ route('approvals.pending') }}">⏳ Pending Approvals</a>
-    </div>
-
-    <!-- SEARCH + FILTER (ADDED FEATURE) -->
-    <div class="filter-box">
-        <form method="GET" action="{{ route('dashboard') }}">
-
-            <input type="text"
-                   name="search"
-                   placeholder="Search by title..."
-                   value="{{ request('search') }}">
-
-            <select name="status">
-                <option value="">All Status</option>
-                <option value="pending" {{ request('status')=='pending' ? 'selected' : '' }}>Pending</option>
-                <option value="approved" {{ request('status')=='approved' ? 'selected' : '' }}>Approved</option>
-                <option value="rejected" {{ request('status')=='rejected' ? 'selected' : '' }}>Rejected</option>
-            </select>
-
-            <button type="submit">Filter</button>
-        </form>
-    </div>
-
-    <!-- USER REQUESTS -->
-    <div class="section-title">My Submitted Requests</div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">Approval System</div>
+            <div class="nav-links">
+                <a href="{{ route('dashboard') }}">Dashboard</a>
+                <a href="{{ route('approvals.index') }}">My Requests</a>
+                <a href="{{ route('approvals.pending') }}">Pending Approvals</a>
+                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: #374151; cursor: pointer;">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
-
-        @forelse($myRequests as $request)
-
-            <div class="card">
-                <h3>{{ $request->title }}</h3>
-                <p>{{ $request->description }}</p>
-
-                <p>
-                    <strong>Status:</strong>
-                    <span class="badge badge-{{ strtolower($request->status) }}">
-                        {{ ucfirst($request->status) }}
-                    </span>
-                </p>
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ $stats['total_requests'] }}</div>
+                <div class="stat-label">Total Requests</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ $stats['pending_requests'] }}</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ $stats['approved_requests'] }}</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ $stats['rejected_requests'] }}</div>
+                <div class="stat-label">Rejected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ $stats['pending_approvals'] }}</div>
+                <div class="stat-label">Pending Your Approval</div>
+            </div>
+        </div>
 
-        @empty
+        <!-- My Requests -->
+        <div class="card">
+            <div class="card-header">
+                <h2>My Requests</h2>
+                <a href="{{ route('approvals.create') }}" class="btn-primary">+ New Request</a>
+            </div>
+            
+            @if($myRequests->count() > 0)
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($myRequests as $request)
+                        <tr>
+                            <td>{{ $request->title }}</td>
+                            <td>
+                                <span class="status-badge status-{{ $request->status }}">
+                                    {{ ucfirst($request->status) }}
+                                </span>
+                            </td>
+                            <td>{{ $request->created_at->format('M d, Y') }}</td>
+                            <td>
+                                <a href="{{ route('approvals.show', $request->id) }}" class="view-link">View Details →</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{ $myRequests->links() }}
+            @else
+                <div class="empty-state">
+                    <p>No requests yet.</p>
+                    <a href="{{ route('approvals.create') }}" style="color: #667eea; margin-top: 10px; display: inline-block;">Create your first request →</a>
+                </div>
+            @endif
+        </div>
 
-            <p style="text-align:center; width:100%; font-size:18px; color:#666;">
-                No requests found
-            </p>
-
-        @endforelse
-
+        <!-- Pending Approvals -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Pending Your Approval</h2>
+                <a href="{{ route('approvals.pending') }}" style="color: #667eea; text-decoration: none;">View All →</a>
+            </div>
+            
+            @if($pendingApprovals->count() > 0)
+                @foreach($pendingApprovals as $flow)
+                    <div class="pending-item">
+                        <a href="{{ route('approvals.show', $flow->request_id) }}">
+                            <strong>{{ $flow->request->title }}</strong>
+                            <span style="color: #6b7280; font-size: 14px;">- {{ $flow->name }}</span>
+                            <div style="font-size: 12px; color: #9ca3af; margin-top: 5px;">
+                                Requested by: {{ $flow->request->user->name }}
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            @else
+                <div class="empty-state">
+                    <p>No pending approvals.</p>
+                </div>
+            @endif
+        </div>
     </div>
-
 </body>
-
 </html>
