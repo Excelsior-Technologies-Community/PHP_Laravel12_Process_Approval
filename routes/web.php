@@ -16,13 +16,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +46,22 @@ Route::middleware(['auth'])->group(function () {
     // View All Requests (My Requests)
     Route::get('/approvals', [ApprovalController::class, 'index'])
         ->name('approvals.index');
-
+    
+    // View Single Request Details
+    Route::get('/approvals/{id}', [ApprovalController::class, 'show'])
+        ->name('approvals.show');
+    
+    // Edit Request
+    Route::get('/approvals/{id}/edit', [ApprovalController::class, 'edit'])
+        ->name('approvals.edit');
+    
+    // Update Request
+    Route::put('/approvals/{id}', [ApprovalController::class, 'update'])
+        ->name('approvals.update');
+    
+    // Delete Request
+    Route::delete('/approvals/{id}', [ApprovalController::class, 'destroy'])
+        ->name('approvals.destroy');
 
     /*
     |------------------------------------------------
@@ -65,7 +77,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/approvals/{id}/action', [ApproverController::class, 'action'])
         ->name('approvals.action');
 
-
     /*
     |------------------------------------------------
     | Approval History
@@ -75,13 +86,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/approvals/history/{id}', [ApproverController::class, 'history'])
         ->name('approvals.history');
 
+    // Add Comment
+    Route::post('/approvals/{id}/comment', [ApprovalController::class, 'addComment'])
+        ->name('approvals.comment');
 });
-
-
-/*
-|--------------------------------------------------------------------------
-| Authentication Routes
-|--------------------------------------------------------------------------
-*/
 
 require __DIR__.'/auth.php';

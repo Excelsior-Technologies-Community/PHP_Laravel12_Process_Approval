@@ -8,19 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('approval_flows', function (Blueprint $table) {
+        Schema::create('approval_comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('request_id')->constrained('approval_requests')->onDelete('cascade');
-            $table->string('name');
-            $table->foreignId('approver_id')->constrained('users')->onDelete('cascade');
-            $table->integer('step')->nullable(); // Add this line
-            $table->string('status')->default('pending'); // Add this line
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->text('comment');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('approval_flows');
+        Schema::dropIfExists('approval_comments');
     }
 };

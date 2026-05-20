@@ -6,12 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ApprovalFlow extends Model
 {
-    protected $fillable = [
-        'request_id',
-        'name',
-        'approver_id',
-        'step'
-    ];
+   protected $fillable = ['request_id', 'name', 'approver_id', 'step', 'status'];
 
     // Relationship with ApprovalRequest
     public function request()
